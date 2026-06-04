@@ -154,7 +154,7 @@ class Model(nn.Module):
         if self.use_graph and trans_attn is not None and edge_index_out.shape[1] > 0:
             B = x.shape[0]
             trans_attn_mat = torch.zeros(B, B, device=device)
-            trans_attn_mat[edge_index_out[0], edge_index_out[1]] = trans_attn.squeeze()
+            trans_attn_mat[edge_index_out[0], edge_index_out[1]] = trans_attn.reshape(edge_index_out.shape[1], -1).mean(dim=1)
             refined_attn = torch.sigmoid(self.alpha_refine) * trans_attn_mat + (1 - torch.sigmoid(self.alpha_refine)) * attn_init
             refined_attn = torch.sigmoid(refined_attn)
             adj_refined = torch.where(refined_attn >= self.graphconstructor.phi, torch.ones_like(refined_attn), torch.zeros_like(refined_attn))

@@ -84,6 +84,8 @@ def train(train_loader, test_loader, input_dim, graph_head, phi, gcn_dim, mlp_di
             y_test_stack = np.hstack(y_test)
             y_pred = KMeans(n_clusters=n_clusters, random_state=seed, n_init=20).fit_predict(z_test_stack)
             acc, f1, nmi, ari, homo, comp = evaluate(y_test_stack, y_pred)
+            np.save(save_model_path.replace(".pt","_pred.npy"), y_pred)
+            np.save(save_model_path.replace(".pt","_emb.npy"), z_test_stack)
 
             z_test_epoch.append(z_test)
             y_test_epoch.append(y_test)

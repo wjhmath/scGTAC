@@ -122,5 +122,9 @@ fig.text(0.03,0.965,"a",fontsize=12,fontweight="bold",va="top")
 fig.text(0.03,0.51,"b",fontsize=12,fontweight="bold",va="top")
 fig.text(0.50,0.51,"c",fontsize=12,fontweight="bold",va="top")
 
-for ext in ["pdf","svg","png"]: fig.savefig(f"{OUT}/Figure3_full.{ext}")
-print("done -> Figure3_full")
+import shutil
+for ext in ["pdf","svg","png"]:
+    fig.savefig(f"{OUT}/Figure3.{ext}")
+    os.makedirs(f"{PROJ}/paper_figures_final/Fig3_biological",exist_ok=True)
+    shutil.copy(f"{OUT}/Figure3.{ext}",f"{PROJ}/paper_figures_final/Fig3_biological/Figure3.{ext}")
+print("done -> Figure3")

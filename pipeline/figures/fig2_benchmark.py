@@ -14,7 +14,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 METHOD_NAME="scAGCR"   # <<< 改名后改这里
 PROJ="/home/liyang/BioJiaheWang/scAGCR"
-OUT=f"{PROJ}/paper_figures/Figure1_main_benchmark"; os.makedirs(OUT,exist_ok=True)
+OUT=f"{PROJ}/paper_figures_final/Fig2_benchmark"; os.makedirs(OUT,exist_ok=True)
 
 LINEUP=["muraro_pancreas","baron","GSE103354","GSE103322","Tonsil","GSE150580_Mammary",
         "GSE119531","GSE194122_PBMC_Bench_1","multiome","GSE159115_ccRCC",
@@ -77,7 +77,7 @@ mpl.rcParams.update({"font.family":"sans-serif","font.sans-serif":["Arial","Helv
     "legend.fontsize":6,"pdf.fonttype":42,"ps.fonttype":42,"savefig.bbox":"tight","savefig.dpi":600})
 
 fig=plt.figure(figsize=(7.5,6.4))
-gs=fig.add_gridspec(2,2,height_ratios=[1.25,1.45],hspace=0.7,wspace=0.5,
+gs=fig.add_gridspec(2,2,height_ratios=[1.25,1.45],hspace=0.35,wspace=0.5,
                     left=0.12,right=0.94,top=0.95,bottom=0.1)
 axa=fig.add_subplot(gs[0,:]); axb=fig.add_subplot(gs[1,0]); axc=fig.add_subplot(gs[1,1])
 
@@ -143,8 +143,10 @@ handles=[Patch(facecolor=RANKCOL[r],label=f"{r+1}") for r in range(7)]
 axc.legend(handles=handles,title="Rank",loc="lower right",frameon=False,ncol=7,
            fontsize=5.2,title_fontsize=6,columnspacing=0.4,handlelength=0.8,handletextpad=0.3,bbox_to_anchor=(1.03,-0.32))
 
-for ax,lab in zip([axa,axb,axc],["a","b","c"]):
-    ax.text(-0.08,1.06,lab,transform=ax.transAxes,fontsize=11,fontweight="bold",va="top",ha="right")
+# subplot labels - 用 fig.transFigure 统一对齐
+fig.text(0.01, 0.98, "a", fontsize=13, fontweight="bold", va="top", ha="left")
+fig.text(0.01, 0.52, "b", fontsize=13, fontweight="bold", va="top", ha="left")
+fig.text(0.50, 0.52, "c", fontsize=13, fontweight="bold", va="top", ha="left")
 
-for ext in ["pdf","svg","png"]: fig.savefig(f"{OUT}/Figure1_final.{ext}"); print("saved",ext)
+for ext in ["pdf","svg","png"]: fig.savefig(f"{OUT}/Figure2.{ext}"); print("saved",ext)
 plt.close(fig); print("done ->",OUT)

@@ -27,3 +27,6 @@ __pycache__/
 .DS_Store
 baselines/repos/
 baselines/repos/
+paper_figures_final/
+generated_tables/
+baselines/scgpt_model/
