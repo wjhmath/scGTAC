@@ -7,8 +7,8 @@ from matplotlib.patches import Rectangle
 from scipy.optimize import linear_sum_assignment
 from sklearn.metrics import adjusted_rand_score
 
-METHOD="scAGCR"
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; OUT=f"{PROJ}/paper_figures/Figure3_umap"
+METHOD="scGTAC"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; OUT=f"{PROJ}/paper_figures/Figure3_umap"
 DATA=f"{PROJ}/data/muraro_pancreas/muraro_pancreas.h5ad"; CACHE=f"{OUT}/_umap_cache.npz"
 BL=[("scvi","scVI"),("scgnn","scGNN"),("seurat","Seurat"),("dec","DEC"),("scdeepcluster","scDeepCluster"),("scdsc","scDSC")]
 

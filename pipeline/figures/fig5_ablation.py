@@ -1,7 +1,7 @@
 """Fig.5 Ablation — clean delta bars, no error bars"""
 import numpy as np, matplotlib.pyplot as plt, glob, re, os
 
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 OUT=f"{PROJ}/paper_figures_final/Fig5_ablation"; os.makedirs(OUT,exist_ok=True)
 
 def collect(var, ds):

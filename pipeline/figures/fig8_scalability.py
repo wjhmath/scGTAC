@@ -1,13 +1,15 @@
 """Fig.8: Scalability — (a) Simulated + (b) Real datasets"""
 import numpy as np, pandas as pd, matplotlib.pyplot as plt, os
 from scipy.optimize import curve_fit
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 OUT=f"{PROJ}/paper_figures_final/Fig8_scalability"; os.makedirs(OUT,exist_ok=True)
 def power(x,a,b): return a*np.power(x,b)
 def linear(x,a,b): return a*x+b
-SHORT={"muraro_pancreas":"Muraro","GSE123516_labeled":"GSE123516","GSE150580_Mammary":"GSE150580",
-    "GSE159115_ccRCC":"GSE159115","GSE194122_PBMC_Bench_1":"GSE194122-B1",
-    "GSE194122_PBMC_Test":"GSE194122-Test","10X_PBMC":"10X PBMC"}
+SHORT={"muraro_pancreas":"Muraro","GSE123516_labeled":"Intestine","GSE150580_Mammary":"Mammary",
+    "GSE159115_ccRCC":"Kidney ccRCC","GSE194122_PBMC_Bench_1":"BMMC-B1",
+    "GSE194122_PBMC_Test":"BMMC-test","10X_PBMC":"10X PBMC",
+    "GSE103354":"Airway","GSE103322":"Puram","GSE119531":"UUO kidney",
+    "68kPBMC":"68k PBMC"}
 plt.rcParams.update({"font.family":"sans-serif","font.sans-serif":["Arial","Helvetica","DejaVu Sans"],
     "font.size":9,"axes.spines.top":False,"axes.spines.right":False,"axes.linewidth":0.6,"pdf.fonttype":42,"savefig.dpi":600})
 fig,axes=plt.subplots(1,2,figsize=(11,4.2))

@@ -1,12 +1,12 @@
 """鲁棒性: down-sampling ARI 折线图"""
 import pandas as pd, numpy as np, matplotlib.pyplot as plt, os
 
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 OUT=f"{PROJ}/paper_figures_final/Fig7_robustness"; os.makedirs(OUT,exist_ok=True)
 df=pd.read_csv(f"{PROJ}/results/robustness/downsample.csv")
 df=df.dropna(subset=["ARI"])  # 去掉缺失行
 
-DS_LABEL={"baron":"Baron (8,569)","GSE103322":"GSE103322 (3,363)","GSE119531":"GSE119531 (6,147)"}
+DS_LABEL={"baron":"Baron (8,569)","GSE103322":"Puram (3,363)","GSE119531":"UUO kidney (6,147)"}
 COLORS={"baron":"#5E7367","GSE103322":"#90A0AE","GSE119531":"#C49A8E"}
 MARKERS={"baron":"o","GSE103322":"s","GSE119531":"D"}
 

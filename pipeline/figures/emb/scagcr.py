@@ -1,6 +1,6 @@
 import os, sys, numpy as np, torch, scanpy as sc
 from sklearn.cluster import KMeans
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 sys.path.insert(0, os.path.join(PROJ,"scagcr"))
 from model import Model
 from config import config

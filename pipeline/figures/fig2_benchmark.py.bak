@@ -13,17 +13,17 @@ from matplotlib.patches import Rectangle, Patch
 from matplotlib.colors import LinearSegmentedColormap
 
 METHOD_NAME="scGTAC"   # <<< 改名后改这里
-PROJ="/home/liyang/BioJiaheWang/scGTAC"
+PROJ="/home/liyang/BioJiaheWang/scAGCR"
 OUT=f"{PROJ}/paper_figures_final/Fig2_benchmark"; os.makedirs(OUT,exist_ok=True)
 
 LINEUP=["muraro_pancreas","baron","GSE103354","GSE103322","Tonsil","GSE150580_Mammary",
         "GSE119531","GSE194122_PBMC_Bench_1","multiome","GSE159115_ccRCC",
         "GSE194122_PBMC_Test","Goolam","Crohn","68kPBMC","GSE123516_labeled"]
-DISP={"muraro_pancreas":"Muraro","baron":"Baron","GSE103354":"Airway","GSE103322":"Puram",
-      "Tonsil":"Tonsil","GSE150580_Mammary":"Mammary","GSE119531":"UUO kidney",
-      "GSE194122_PBMC_Bench_1":"BMMC-B1","multiome":"Multiome","GSE159115_ccRCC":"Kidney ccRCC",
-      "GSE194122_PBMC_Test":"BMMC-test","Goolam":"Goolam","Crohn":"Crohn",
-      "68kPBMC":"68k PBMC","GSE123516_labeled":"Intestine"}
+DISP={"muraro_pancreas":"Muraro","baron":"Baron","GSE103354":"GSE103354","GSE103322":"GSE103322",
+      "Tonsil":"Tonsil","GSE150580_Mammary":"GSE150580","GSE119531":"GSE119531",
+      "GSE194122_PBMC_Bench_1":"GSE194122-B1","multiome":"Multiome","GSE159115_ccRCC":"GSE159115-ccRCC",
+      "GSE194122_PBMC_Test":"GSE194122-Test","Goolam":"Goolam","Crohn":"Crohn",
+      "68kPBMC":"68kPBMC","GSE123516_labeled":"GSE123516"}
 BASE=["dec","scvi","scgnn","seurat","scdeepcluster","scdsc"]
 BL={"dec":"DEC","scvi":"scVI","scgnn":"scGNN","seurat":"Seurat","scdeepcluster":"scDeepCluster","scdsc":"scDSC"}
 ALIAS={"muraro":"muraro_pancreas"}
@@ -105,7 +105,7 @@ for k,mk in enumerate(metrics):
     axb.barh(yc+(1-k)*bh,[bmean(me,mk) for me in methods],height=bh,color=MCOL[mk],label=mk,edgecolor="white",linewidth=0.3)
 axb.add_patch(Rectangle((0,yc[0]-0.5),1.0,1.0,color=ACCENT,alpha=0.08,zorder=0))
 for k,mk in enumerate(metrics):
-    sm=bmean(METHOD_NAME,mk); bb=max(bmean(me,mk) for me in BASE); imp=(sm-bb)*100
+    sm=bmean(METHOD_NAME,mk); bb=max(bmean(me,mk) for me in BASE); imp=(sm-bb)/bb*100
     axb.text(sm+0.012,yc[0]+(1-k)*bh,f"+{imp:.0f}%",va="center",ha="left",fontsize=5.6,fontweight="bold",color=MCOL[mk])
 axb.set_yticks(yc); axb.set_yticklabels([METHOD_NAME]+[BL[m] for m in base_sorted])
 axb.get_yticklabels()[0].set_fontweight("bold"); axb.invert_yaxis()

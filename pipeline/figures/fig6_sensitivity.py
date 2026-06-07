@@ -1,7 +1,7 @@
 """Fig5: 参数敏感性 — tau / lambda_cl / dropout 三面板折线图"""
 import numpy as np, matplotlib.pyplot as plt, glob, re, os
 
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 OUT=f"{PROJ}/paper_figures_final/Fig6_sensitivity"; os.makedirs(OUT,exist_ok=True)
 
 def collect(tag):
