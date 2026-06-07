@@ -1,136 +1,85 @@
-# scAGCR
+# scGTAC
 
-`scAGCR` (single-cell Adaptive Graph-Contrastive Refinement) is a graph-based deep clustering method for single-cell RNA-seq data. The method combines:
+**scGTAC: Graph Transformer-based Adaptive Contrastive Learning for Deep Single-Cell Clustering**
 
-- learnable graph construction
-- transformer-based graph refinement
-- graph-aware contrastive learning
-- staged clustering refinement
-- ZINB-based count-aware regularization
+## Overview
 
-This `repo/` folder is a cleaned package-style extraction centered on the scAGCR method and the core figure-generation scripts used in the manuscript.
+scGTAC is an end-to-end deep clustering framework for scRNA-seq data. It jointly learns an adaptive cell–cell graph, latent cell representations and cluster assignments through a unified two-phase training process.
 
-## Structure
-
-```text
-repo/
-├── README.md
-├── requirements.txt
-├── scagcr/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── utils.py
-│   ├── model.py
-│   └── config.py
-├── scripts/
-│   ├── run_scagcr_repro.sh
-│   └── run_scagcr_custom.sh
-├── figures/
-└── examples/
-```
+- **Adaptive graph construction** — a multi-head attention constructor with a learnable sparsity threshold replaces the fixed KNN graph, enabling graph–representation co-evolution.
+- **Topology-aware contrastive learning** — graph neighbours serve as affinity-weighted soft positives, injecting topological information into the contrastive objective.
+- **Count-aware modelling** — a ZINB decoder preserves overdispersion and zero inflation of raw counts.
+- **Two-phase training** — reconstruction, ZINB and contrastive losses stabilise the latent space before the clustering loss is activated.
 
 ## Installation
 
-```bash
-pip install -r repo/requirements.txt
-```
+    git clone https://github.com/wjhmath/scGTAC.git
+    cd scGTAC
+    conda create -n scgtac python=3.10 -y
+    conda activate scgtac
+    pip install -r requirements.txt
 
-Note: `torch-geometric` must match your installed PyTorch/CUDA stack.
+## Quick Start
 
-## Input data
+Run on a single dataset:
 
-The method expects a Scanpy-readable `.h5ad` file.
+    bash scripts/run_scagcr_repro.sh muraro_pancreas 1
 
-### Label columns
-The loader will search for labels in `adata.obs` using these names, in order:
+Run with custom data:
 
-- `cell_type`
-- `cell_type_label`
-- `CellType`
-- `celltype`
-- `label`
-- `labels`
-- `Group`
+    DATA_PATH=/path/to/data.h5ad N_CLUSTERS=10 bash scripts/run_scagcr_custom.sh my_dataset 1
 
-### Built-in preprocessing
-At runtime the loader will:
+Input: an `.h5ad` file with raw UMI counts in `adata.X` and cell-type labels in `adata.obs['cell_type']` (labels are used only for evaluation).
 
-- subsample to 20,000 cells if the dataset is larger
-- normalize and log-transform if expression values are not already in a log-scale range
-- select top 2,000 highly variable genes when `n_vars > 2000`
-- use a fixed 80/20 train-test split with `random_state=1`
+## Reproducing Paper Results
 
-## Quick start
+    ./run.sh train       # Train scGTAC on all 15 benchmark datasets
+    ./run.sh baselines   # Run baseline methods
+    ./run.sh ablation    # Run ablation experiments
+    ./run.sh figs        # Generate paper figures
 
-### Reproduce a default run on a supported dataset
+## Benchmark Datasets
 
-```bash
-bash repo/scripts/run_scagcr_repro.sh muraro_pancreas 1
-```
+All 15 benchmark datasets are publicly available:
 
-Supported dataset names in the bundled script:
+| Dataset | Source | Accession |
+|---------|--------|-----------|
+| Muraro | GEO | GSE85241 |
+| Baron | GEO | GSE84133 |
+| Airway | GEO | GSE103354 |
+| Puram | GEO | GSE103322 |
+| Tonsil | Broad SCP | SCP2169 |
+| Mammary | GEO | GSE150580 |
+| UUO kidney | GEO | GSE119531 |
+| BMMC-B1 / BMMC-test / Multiome | GEO | GSE194122 |
+| Kidney ccRCC | GEO | GSE159115 |
+| Goolam | ArrayExpress | E-MTAB-3321 |
+| Crohn | Broad SCP | SCP359 |
+| 68k PBMC | 10x Genomics | — |
+| Intestine | GEO | GSE123516 |
 
-- `baron`
-- `zheng68k`
-- `multiome`
-- `muraro_pancreas`
+## Project Structure
 
-### Run on a custom dataset
+    scGTAC/
+    ├── scagcr/          # Core model (config, model, main, utils)
+    ├── baselines/       # Baseline implementations
+    ├── pipeline/        # Experiment scripts and figure generation
+    ├── scripts/         # Run scripts
+    ├── requirements.txt
+    └── run.sh
 
-```bash
-DATA_PATH=/path/to/your_data.h5ad \
-N_CLUSTERS=10 \
-EPOCHS=150 \
-TAU=0.8 \
-LAMBDA_CL=0.7 \
-DROPOUT=0.3 \
-bash repo/scripts/run_scagcr_custom.sh my_dataset 1
-```
+## Citation
 
-## Outputs
+If you find scGTAC useful in your research, please cite:
 
-The scripts write:
+    @article{wang2026scgtac,
+      title={scGTAC: Graph Transformer-based Adaptive Contrastive Learning
+             for Deep Single-Cell Clustering},
+      author={Wang, Jiahe and Wu, Yan and Li, Yang and Zhang, Yapu},
+      journal={Journal of the Operations Research Society of China},
+      year={2026}
+    }
 
-- a training log under `results/.../logs/`
-- a checkpoint under `results/.../checkpoints/`
+## License
 
-The main training script prints final clustering metrics as a Python dict containing:
-
-- `CA`
-- `NMI`
-- `ARI`
-
-## Plotting code
-
-The main manuscript plotting scripts can be organized under `repo/figures/`. The most useful ones to carry over are:
-
-- benchmark comparison plots
-- ablation plots
-- parameter-sensitivity plots
-- success / failure case-study plots
-- qualitative clustering panel plots
-
-These scripts are especially useful when they are written with frozen source data so they can reproduce figures without depending on the full benchmark workspace.
-
-## Core dependencies
-
-Minimal runtime dependencies for scAGCR itself:
-
-- `torch`
-- `numpy`
-- `scipy`
-- `scanpy`
-- `anndata`
-- `scikit-learn`
-- `torch-geometric`
-
-Additional plotting dependencies included in `repo/requirements.txt`:
-
-- `pandas`
-- `matplotlib`
-- `scienceplots`
-- `umap-learn`
-
-## Notes
-
-This package-style extraction is intended to make scAGCR easier to understand and reuse without the rest of the original multi-method benchmark repository.
+MIT License
