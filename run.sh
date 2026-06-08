@@ -3,7 +3,7 @@
 #   用法: ./run.sh <阶段>   阶段: train | baselines | ablation | agg | figs
 #   train/baselines/ablation 是 SLURM 异步作业 → 投出去等 squeue 跑完, 再 agg → figs
 set -euo pipefail
-cd /home/liyang/BioJiaheWang/scAGCR
+cd /home/liyang/BioJiaheWang/scGTAC
 CONDA_SH=/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh
 case "${1:-help}" in
   train)      bash pipeline/train/run_all.sh ;;

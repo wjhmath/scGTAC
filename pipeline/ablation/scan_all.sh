@@ -1,7 +1,7 @@
 #!/bin/bash
 # 用法: ./pipeline/ablation/scan_all.sh [maxcells=40000] [epochs=200]
 set -uo pipefail
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; CHULI="/home/liyang/BioJiaheWang/RARECELL/data/chuli"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; CHULI="/home/liyang/BioJiaheWang/RARECELL/data/chuli"
 MAXCELLS=${1:-40000}; EP=${2:-200}
 DATASETS=(
   "baron|data/baron/baron.h5ad|14" "muraro_pancreas|data/muraro_pancreas/muraro_pancreas.h5ad|10"

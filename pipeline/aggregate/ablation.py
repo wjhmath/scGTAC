@@ -1,5 +1,5 @@
 import glob, re, os, csv, numpy as np
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; DS="baron"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; DS="baron"
 os.makedirs(f"{PROJ}/generated_tables", exist_ok=True)
 def collect(vardir):
     rows=[]

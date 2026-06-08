@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=scAGCR_one
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/scAGCR_one_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/scAGCR_one_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/scAGCR_one_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/scAGCR_one_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -12,7 +12,7 @@
 #SBATCH -p a100
 # 用法: sbatch pipeline/train/run_one.sh <name> <data> <k|auto> <epochs> <seed>
 set -uo pipefail
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; ENV="${PROJ}/scagcr_env"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; ENV="${PROJ}/scagcr_env"
 CONDA_SH="/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh"
 RESULT_BASE="${PROJ}/results/scagcr_final"
 source "${CONDA_SH}"; export LD_LIBRARY_PATH="${ENV}/lib:${LD_LIBRARY_PATH:-}"
@@ -42,7 +42,7 @@ fi
 echo "    n_clusters=${NCLUST}"
 
 T0=$(date +%s)
-if python scagcr/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" \
+if python scgtac/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" \
      --epochs "${EP}" --seed "${SEED}" --save_model_path "${CKPT}" > "${RUN_LOG}" 2>&1; then
   echo "[OK] ${NAME} ($(( $(date +%s)-T0 ))s)  $(tail -n1 "${RUN_LOG}")"
 else echo "[FAIL] ${NAME} (详见 ${RUN_LOG})"; tail -n5 "${RUN_LOG}"; exit 1; fi

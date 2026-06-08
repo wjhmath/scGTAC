@@ -3,7 +3,7 @@
 #SBATCH --qos=a100g1 --gres=gpu:a100:1 -p a100
 set -uo pipefail
 DS=$1; K=$2; H5=$3
-PROJ=/home/liyang/BioJiaheWang/scAGCR
+PROJ=/home/liyang/BioJiaheWang/scGTAC
 source /home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh
 CSV=$PROJ/results/scalability/bench_${DS}.csv
 NC=$(source activate "$PROJ/scagcr_env" 2>/dev/null && python3 -c "import scanpy as sc;print(sc.read_h5ad('$H5',backed='r').n_obs)")
@@ -20,7 +20,7 @@ timeit(){
 }
 # scAGCR
 source activate "$PROJ/scagcr_env" 2>/dev/null
-timeit "scAGCR" "cd $PROJ && python scagcr/main.py --data_path $H5 --n_clusters $K --epochs 200 --seed 1 --save_model_path $CK && rm -f $CK"
+timeit "scAGCR" "cd $PROJ && python scgtac/main.py --data_path $H5 --n_clusters $K --epochs 200 --seed 1 --save_model_path $CK && rm -f $CK"
 # Baselines
 PYT="$PROJ/envs/bl_torch/bin/python"; PYR="$PROJ/envs/bl_r/bin/python"
 for spec in "DEC|run_dec.py|$PYT" "scDeepCluster|run_scdeepcluster.py|$PYT" "scVI|run_scvi.py|$PYT" \

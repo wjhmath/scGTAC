@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=scAGCR_baselines
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/baselines_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/baselines_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/baselines_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/baselines_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -21,7 +21,7 @@
 set -uo pipefail
 
 # ── 路径 ──
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 BL="${PROJ}/baselines"
 DATA="${PROJ}/data"
 OUT="${PROJ}/results/baselines"

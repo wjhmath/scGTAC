@@ -58,7 +58,7 @@ esac
 LOG_PATH="$LOG_DIR/${DATASET}_seed${SEED}.log"
 CKPT_PATH="$CKPT_DIR/${DATASET}_seed${SEED}.pt"
 
-python scagcr/main.py \
+python scgtac/main.py \
   --data_path "$DATA_PATH" \
   --n_clusters "$N_CLUSTERS" \
   --graph_head "$GRAPH_HEAD" \

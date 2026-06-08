@@ -1,5 +1,5 @@
 import os, sys, numpy as np, scanpy as sc, scipy.sparse as sps, torch
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 sys.path.insert(0, f"{PROJ}/baselines")
 from common import load_dataset, set_seed
 DATA=f"{PROJ}/data/muraro_pancreas/muraro_pancreas.h5ad"

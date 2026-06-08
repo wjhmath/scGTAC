@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bl_fill
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/bl_fill_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/bl_fill_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/bl_fill_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/bl_fill_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -12,7 +12,7 @@
 #SBATCH -p a100
 
 METHOD=$1                       # scdeepcluster 或 scdsc
-PROJ=/home/liyang/BioJiaheWang/scAGCR
+PROJ=/home/liyang/BioJiaheWang/scGTAC
 source /home/liyang/miniconda3/bin/activate $PROJ/envs/bl_torch
 cd $PROJ/baselines
 OUT=../results/baselines_chuli/$METHOD

@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=downsample
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/downsample_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/downsample_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/downsample_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/downsample_%j.err
 #SBATCH --nodes=1 -n 1 --cpus-per-task=4 --mem=64G --time=12:00:00
 #SBATCH --qos=a100g1 --gres=gpu:a100:1 -p a100
 set -uo pipefail
-PROJ=/home/liyang/BioJiaheWang/scAGCR
+PROJ=/home/liyang/BioJiaheWang/scGTAC
 source /home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh
 source activate "$PROJ/scagcr_env"; cd "$PROJ"
 
@@ -38,7 +38,7 @@ print(f'  {\"$DS\"} ratio=$RATIO: {n}/{adata.n_obs} cells')
 "
     for S in 1 42 84; do
       CK="/tmp/ds_tmp_${SLURM_JOB_ID}.pt"
-      OUT=$(python scagcr/main.py --data_path "$SUB_H5" --n_clusters "$K" \
+      OUT=$(python scgtac/main.py --data_path "$SUB_H5" --n_clusters "$K" \
         --epochs 200 --seed "$S" --save_model_path "$CK" 2>&1 | tail -1)
       ARI=$(echo "$OUT" | grep -oP "'ARI': [0-9.]+" | grep -oP "[0-9.]+$")
       NMI=$(echo "$OUT" | grep -oP "'NMI': [0-9.]+" | grep -oP "[0-9.]+$")

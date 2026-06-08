@@ -4,7 +4,7 @@ from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 import os, warnings
 warnings.filterwarnings("ignore")
-PROJ = "/home/liyang/BioJiaheWang/scAGCR"
+PROJ = "/home/liyang/BioJiaheWang/scGTAC"
 OUT = PROJ + "/paper_figures_final/Fig4_bio_enrichment"
 os.makedirs(OUT, exist_ok=True)
 plt.rcParams.update({"font.family":"sans-serif","font.sans-serif":["Arial","Helvetica","DejaVu Sans"],"font.size":10,"pdf.fonttype":42})
@@ -58,7 +58,7 @@ for lib, title, cmap, pn in [("GO","GO Biological Process","YlGn","b"),("KEGG","
     for s in ax.spines.values(): s.set_visible(False)
     ax.tick_params(left=False, bottom=False); ax.set_xlim(-0.5, len(CT_ORDER)-0.5)
     cb = plt.colorbar(sm, ax=ax, shrink=0.4, pad=0.02, aspect=12)
-    cb.set_label("-log/home/liyang/BioJiaheWang/scAGCR{10}", fontsize=9)
+    cb.set_label("-log/home/liyang/BioJiaheWang/scGTAC{10}", fontsize=9)
     sizes = [3, 10, 20]
     for sv in sizes: ax.scatter([],[],s=sv*20+30,c="gray",alpha=0.4,edgecolors="#666",linewidths=0.5,label=str(sv))
     ax.legend(title="Count",loc="upper right",frameon=True,fontsize=8,title_fontsize=9,labelspacing=2.0,handletextpad=1.5,borderpad=1.5,fancybox=True,edgecolor="#ddd",bbox_to_anchor=(1.28,1.0))

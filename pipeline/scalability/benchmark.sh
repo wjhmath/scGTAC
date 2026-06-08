@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=time_bench
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/time_bench_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/time_bench_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/time_bench_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/time_bench_%j.err
 #SBATCH --nodes=1 -n 1 --cpus-per-task=4 --mem=64G --time=24:00:00
 #SBATCH --qos=a100g1 --gres=gpu:a100:1 -p a100
 set -uo pipefail
-PROJ=/home/liyang/BioJiaheWang/scAGCR
+PROJ=/home/liyang/BioJiaheWang/scGTAC
 CHULI=/home/liyang/BioJiaheWang/RARECELL/data/chuli
 CONDA_SH=/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh
 source "$CONDA_SH"
@@ -63,7 +63,7 @@ for ds in "${DS_ORDER[@]}"; do
   # --- scAGCR (200ep) ---
   source activate "$PROJ/scagcr_env" 2>/dev/null
   timeit "scAGCR" "$ds" "$NC" \
-    "cd $PROJ && source activate $PROJ/scagcr_env 2>/dev/null && python scagcr/main.py --data_path $H5 --n_clusters $K --epochs 200 --seed 1 --save_model_path $CK && rm -f $CK"
+    "cd $PROJ && source activate $PROJ/scagcr_env 2>/dev/null && python scgtac/main.py --data_path $H5 --n_clusters $K --epochs 200 --seed 1 --save_model_path $CK && rm -f $CK"
 
   # --- Baselines ---
   PY_TORCH="$PROJ/envs/bl_torch/bin/python"

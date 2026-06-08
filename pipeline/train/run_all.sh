@@ -2,7 +2,7 @@
 # 用法: ./pipeline/train/run_all.sh [seed] [epochs_override]
 #   把全部 17 个数据集各投一个 GPU 作业 (并行排队). run_one 内部自动跳过已完成的.
 set -uo pipefail
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 CHULI="/home/liyang/BioJiaheWang/RARECELL/data/chuli"
 SEED=${1:-1}; EP_OVERRIDE=${2:-}
 DATASETS=(

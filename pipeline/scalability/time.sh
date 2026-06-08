@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=scalability
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/scalability_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/scalability_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/scalability_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/scalability_%j.err
 #SBATCH --nodes=1 -n 1 --cpus-per-task=4 --mem=64G --time=48:00:00
 #SBATCH --qos=a100g2 --gres=gpu:a100:1 -p a100
 set -uo pipefail
-PROJ=/home/liyang/BioJiaheWang/scAGCR; ENV=$PROJ/scagcr_env
+PROJ=/home/liyang/BioJiaheWang/scGTAC; ENV=$PROJ/scagcr_env
 source /home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh
 source activate "$ENV" 2>/dev/null || conda activate "$ENV"; cd "$PROJ"
 CHULI=/home/liyang/BioJiaheWang/RARECELL/data/chuli
@@ -43,7 +43,7 @@ print(a.obs[c[0]].astype(str).nunique() if c else 0)")
   fi
   echo ">>> $NAME ($NCELLS cells, k=$NCLUST)"
   T0=$(date +%s)
-  python scagcr/main.py --data_path "$DATA" --n_clusters "$NCLUST" --epochs "$EP" \
+  python scgtac/main.py --data_path "$DATA" --n_clusters "$NCLUST" --epochs "$EP" \
     --seed 1 --save_model_path "$CK" > /dev/null 2>&1
   T1=$(date +%s); SECS=$((T1-T0))
   echo "$NAME,$NCELLS,$NCLUST,$SECS" >> "$CSV"

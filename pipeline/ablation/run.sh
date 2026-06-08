@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=abl_i3
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/abl_i3_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/abl_i3_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/abl_i3_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/abl_i3_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -11,7 +11,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH -p a100
 set -uo pipefail
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; ENV="${PROJ}/scagcr_env"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; ENV="${PROJ}/scagcr_env"
 CONDA_SH="/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh"
 RESULT_BASE="${PROJ}/results/ablation_iter3"
 source "${CONDA_SH}"; export LD_LIBRARY_PATH="${ENV}/lib:${LD_LIBRARY_PATH:-}"
@@ -42,7 +42,7 @@ for SEED in "${SEEDS[@]}"; do
       LOG="${OUTDIR}/run_seed${SEED}.log"; CKPT="${OUTDIR}/${VAR}_${NAME}_seed${SEED}.pt"
       echo ""; echo ">>> [${NAME}|${VAR}] seed=${SEED} ep=${EPOCHS} $(date +%H:%M:%S)"
       if [ -f "${LOG}" ] && grep -q ARI "${LOG}"; then echo "[SKIP] 已完成"; skip=$((skip+1)); continue; fi
-      if python scagcr/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" \
+      if python scgtac/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" \
            --epochs "${EPOCHS}" --seed "${SEED}" --save_model_path "${CKPT}" ${FLAGS} > "${LOG}" 2>&1; then
         echo "[OK] ${NAME}/${VAR} $(tail -n1 "${LOG}")"; ok=$((ok+1))
       else echo "[FAIL] ${NAME}/${VAR}"; tail -n5 "${LOG}"; fail=$((fail+1)); fi

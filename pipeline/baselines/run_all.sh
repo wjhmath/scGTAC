@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bl_chuli
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/bl_chuli_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/bl_chuli_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/bl_chuli_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/bl_chuli_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -11,7 +11,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH -p a100
 
-PROJ="/home/liyang/BioJiaheWang/scAGCR"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"
 CHULI="/home/liyang/BioJiaheWang/RARECELL/data/chuli"
 CONDA_SH="/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh"
 OUT="${PROJ}/results/baselines_chuli"

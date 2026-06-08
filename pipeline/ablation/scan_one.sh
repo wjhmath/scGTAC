@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=abl_scan
-#SBATCH --output=/home/liyang/BioJiaheWang/scAGCR/log/abl_scan_%j.out
-#SBATCH --error=/home/liyang/BioJiaheWang/scAGCR/log/abl_scan_%j.err
+#SBATCH --output=/home/liyang/BioJiaheWang/scGTAC/log/abl_scan_%j.out
+#SBATCH --error=/home/liyang/BioJiaheWang/scGTAC/log/abl_scan_%j.err
 #SBATCH --nodes=1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=4
@@ -12,7 +12,7 @@
 #SBATCH -p a100
 # 用法: sbatch scan_one.sh <name> <data> <k|auto> <epochs>
 set -uo pipefail
-PROJ="/home/liyang/BioJiaheWang/scAGCR"; ENV="${PROJ}/scagcr_env"
+PROJ="/home/liyang/BioJiaheWang/scGTAC"; ENV="${PROJ}/scagcr_env"
 CONDA_SH="/home/liyang/BioJiaheWang/miniconda3/etc/profile.d/conda.sh"
 source "${CONDA_SH}"; export LD_LIBRARY_PATH="${ENV}/lib:${LD_LIBRARY_PATH:-}"
 source activate "${ENV}" 2>/dev/null || conda activate "${ENV}" 2>/dev/null || true
@@ -38,7 +38,7 @@ declare -A FLAGS=(
 run(){ local V=$1 S=$2 OUT="${PROJ}/results/ablation/$V/${NAME}"; mkdir -p "$OUT"
   local LOG="$OUT/run_seed$S.log"
   if [ -f "$LOG" ] && grep -q ARI "$LOG"; then echo "[skip] $V s$S"; return; fi
-  if python scagcr/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" --epochs "${EP}" \
+  if python scgtac/main.py --data_path "${DATA}" --n_clusters "${NCLUST}" --epochs "${EP}" \
        --seed "$S" --save_model_path "$CK" ${FLAGS[$V]} > "$LOG" 2>&1; then
     echo "[ok] $V s$S $(tail -n1 "$LOG")"; else echo "[fail] $V s$S"; tail -n3 "$LOG"; fi; }
 

@@ -1,7 +1,7 @@
 import os, sys, numpy as np, torch, scanpy as sc
 from sklearn.cluster import KMeans
 PROJ="/home/liyang/BioJiaheWang/scGTAC"
-sys.path.insert(0, os.path.join(PROJ,"scagcr"))
+sys.path.insert(0, os.path.join(PROJ,"scgtac"))
 from model import Model
 from config import config
 device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -37,5 +37,5 @@ with torch.no_grad():
         bx=torch.tensor(X[bidx]).float().to(device)
         Z[bidx]=model(bx)[0].cpu().numpy()
 pred=KMeans(n_clusters=NCL, random_state=SEED, n_init=20).fit_predict(Z)
-np.savez(f"{OUT}/emb_muraro_scAGCR.npz", emb=Z, y=y, pred=pred)
-print("saved scAGCR", Z.shape)
+np.savez(f"{OUT}/emb_muraro_scGTAC.npz", emb=Z, y=y, pred=pred)
+print("saved scGTAC", Z.shape)
