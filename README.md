@@ -46,7 +46,7 @@ Supported built-in datasets: muraro_pancreas, baron, multiome, zheng68k.
 
 **Run directly with Python:**
 
-    python scagcr/main.py \
+    python scgtac/main.py \
       --data_path data/muraro_pancreas/muraro_pancreas.h5ad \
       --n_clusters 10 \
       --gcn_dim 256 --mlp_dim 128 \
@@ -124,7 +124,7 @@ Data repositories:
 ## Project Structure
 
     scGTAC/
-    ├── scagcr/                  # Core algorithm
+    ├── scgtac/                  # Core algorithm
     │   ├── config.py            # Default hyperparameters
     │   ├── model.py             # Model architecture
     │   ├── main.py              # Training loop
@@ -160,7 +160,7 @@ scGTAC is evaluated using three standard clustering metrics:
 - **NMI** (Normalised Mutual Information): Measures shared information between partitions, normalised by entropy. Range: [0, 1].
 - **ACC** (Clustering Accuracy): Best accuracy under the optimal one-to-one label mapping found by the Hungarian algorithm. Range: [0, 1].
 
-All metrics are computed using the same evaluation code in scagcr/utils.py for both scGTAC and all baselines to ensure a fair comparison.
+All metrics are computed using the same evaluation code in scgtac/utils.py for both scGTAC and all baselines to ensure a fair comparison.
 
 ## License
 
