@@ -8,7 +8,7 @@ scGTAC is an end-to-end deep clustering framework for single-cell RNA sequencing
 
 - **Adaptive graph construction**: A multi-head attention constructor with a learnable sparsity threshold infers cell–cell connectivity directly from expression data. The resulting affinity is blended with Graph Transformer encoder attention through a trainable coefficient, creating a feedback loop between graph topology and cell embeddings.
 
-- **Topology-aware contrastive learning**: Beyond standard instance-level contrastive pairs, scGTAC treats neighbours in the adaptively refined graph as affinity-weighted soft positives. Combined with stochastic feature masking and edge dropping, this encourages representations that are simultaneously noise-robust and discriminative across cell types.
+- **Topology-aware contrastive learning**: Beyond standard instance-level contrastive pairs, scGTAC treats neighbours in the adaptively refined graph as affinity-weighted soft positives. Combined with stochastic edge dropping and network dropout, this encourages representations that are simultaneously noise-robust and discriminative across cell types.
 
 - **Count-aware modelling**: A ZINB (zero-inflated negative binomial) decoder models the raw count matrix to preserve the overdispersion and zero inflation characteristic of scRNA-seq data, while a masked reconstruction branch anchors the latent space to the expression manifold.
 
@@ -35,7 +35,7 @@ scGTAC is an end-to-end deep clustering framework for single-cell RNA sequencing
 
     bash scripts/run_scagcr_repro.sh muraro_pancreas 1
 
-Supported built-in datasets: muraro_pancreas, baron, multiome, zheng68k.
+Supported built-in datasets: muraro_pancreas, baron, multiome, Goolam.
 
 **Run on a custom dataset:**
 
@@ -49,7 +49,6 @@ Supported built-in datasets: muraro_pancreas, baron, multiome, zheng68k.
     python scgtac/main.py \
       --data_path data/muraro_pancreas/muraro_pancreas.h5ad \
       --n_clusters 10 \
-      --gcn_dim 256 --mlp_dim 128 \
       --pretrain_epochs 20 --epochs 200 \
       --seed 1
 
@@ -60,7 +59,7 @@ Supported built-in datasets: muraro_pancreas, baron, multiome, zheng68k.
     # Step 1: Train scGTAC on all 15 benchmark datasets (3 seeds each)
     ./run.sh train
 
-    # Step 2: Run all six baseline methods
+    # Step 2: Run all baseline methods
     ./run.sh baselines
 
     # Step 3: Run ablation, parameter sweep and robustness experiments
@@ -86,7 +85,6 @@ All results are saved to results/ and figures to paper_figures_final/.
 | lambda_zinb | 0.2 | ZINB loss weight |
 | alpha | 0.55 | Asymmetric contrastive weight |
 | beta | 0.4 | Topology soft-positive weight |
-| prob_feature | 0.1 | Feature masking probability |
 | prob_edge | 0.5 | Edge dropping probability |
 | dropout | 0.3 | Encoder dropout rate |
 | lr | 0.001 | Adam learning rate |
@@ -126,7 +124,7 @@ Data repositories:
     scGTAC/
     ├── scgtac/                  # Core algorithm
     │   ├── config.py            # Default hyperparameters
-    │   ├── model.py             # Model architecture
+    │   ├── model.py             # Model architecture and losses
     │   ├── main.py              # Training loop
     │   └── utils.py             # Data loading, preprocessing, evaluation
     ├── baselines/               # Baseline method implementations
@@ -136,6 +134,11 @@ Data repositories:
     │   ├── run_scgnn.py         # scGNN
     │   ├── run_dec.py           # DEC
     │   ├── run_scdsc.py         # scDSC
+    │   ├── run_sc3.py           # SC3
+    │   ├── run_leiden.py        # Leiden
+    │   ├── run_simlr.py         # SIMLR
+    │   ├── run_sctag.py         # scTAG
+    │   ├── run_scgpt.py         # scGPT
     │   └── aggregate.py         # Aggregate baseline results
     ├── pipeline/                # Experiment pipeline
     │   ├── train/               # Training scripts
@@ -145,6 +148,8 @@ Data repositories:
     │   ├── scalability/         # Timing and down-sampling
     │   ├── aggregate/           # Result aggregation
     │   └── figures/             # Paper figure generation (fig2–fig8)
+    │       ├── scgtac_palette.py # Shared colour palette / Nature style
+    │       └── emb/             # Per-method embedding extraction
     ├── scripts/                 # Run entry points
     │   ├── run_scagcr_repro.sh  # Reproducible run on built-in datasets
     │   └── run_scagcr_custom.sh # Run on custom datasets
