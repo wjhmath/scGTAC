@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
-"""Figure 3 (Muraro): a) UMAP grid  b) per-type recovery  c) marker dotplot."""
+"""Figure 3 (Muraro): a) UMAP grid  b) per-type recovery  c) marker dotplot.
+ Cool-warm: b=RdBu_r diverging, c=EXPR_CMAP warm; a=categorical (unchanged)."""
 import os, glob, numpy as np, pandas as pd, scanpy as sc
 import matplotlib.pyplot as plt, matplotlib as mpl, matplotlib.lines as ml
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Rectangle
 from scipy.optimize import linear_sum_assignment
 from sklearn.metrics import adjusted_rand_score
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from scgtac_palette import HEATMAP_CMAP, EXPR_CMAP, apply_nature_style
+except Exception:
+    import matplotlib.colors as _mc
+    HEATMAP_CMAP='RdBu_r'
+    EXPR_CMAP=_mc.LinearSegmentedColormap.from_list('scgtac_warm',
+        ['#f7f7f7','#fbe3d4','#e6a17e','#cd5e4e','#a4262c'])
+    def apply_nature_style(): pass
 
 METHOD="scGTAC"
 PROJ="/home/liyang/BioJiaheWang/scGTAC"; OUT=f"{PROJ}/paper_figures/Figure3_umap"
 DATA=f"{PROJ}/data/muraro_pancreas/muraro_pancreas.h5ad"; CACHE=f"{OUT}/_umap_cache.npz"
 BL=[("scvi","scVI"),("scgnn","scGNN"),("seurat","Seurat"),("dec","DEC"),("scdeepcluster","scDeepCluster"),("scdsc","scDSC")]
-
+.
 if os.path.exists(CACHE):
     z=np.load(CACHE,allow_pickle=True); coords=z["coords"]; true_str=z["true_str"].astype(str)
 else:
@@ -66,8 +78,9 @@ scld=(me-me.min(0))/(me.max(0)-me.min(0)+1e-9)
 
 PAL=["#4C72B0","#DD8452","#55A868","#C44E52","#8172B3","#937860","#DA8BC3","#7F7F7F","#CCB974","#64B5CD","#B07AA1","#E15759"]
 col={i:PAL[i%len(PAL)] for i in range(len(cats))}
-HEAT=LinearSegmentedColormap.from_list("h",["#EFEAE1","#D2D4C6","#AFBCAC","#869B8B","#5E7367"])
-DOT=LinearSegmentedColormap.from_list("d",["#EFEAE1","#AFBCAC","#5E7367"])
+HEAT=HEATMAP_CMAP
+DOT=EXPR_CMAP
+apply_nature_style()
 mpl.rcParams.update({"font.family":"sans-serif","font.sans-serif":["Arial","DejaVu Sans"],"font.size":7,
     "axes.linewidth":0.5,"pdf.fonttype":42,"savefig.bbox":"tight","savefig.dpi":600})
 
@@ -91,11 +104,12 @@ axb.set_xticks(range(len(order_m))); axb.set_xticklabels(order_m,rotation=35,ha=
 axb.set_yticks(range(len(rowcats))); axb.set_yticklabels([f"{SHORT.get(c,c)} (n={cnt[c]})" for c in rowcats],fontsize=6.3)
 for i in range(R.shape[0]):
     for j in range(R.shape[1]):
-        if not np.isnan(R[i,j]): axb.text(j,i,f"{R[i,j]:.2f}",ha="center",va="center",fontsize=5.4,color="white" if R[i,j]>0.55 else "#3A3A38")
-axb.add_patch(Rectangle((-0.5,-0.5),1,R.shape[0],fill=False,edgecolor="#A8625A",linewidth=1.2)); axb.tick_params(length=2,width=0.5)
+        if not np.isnan(R[i,j]):
+            tc="white" if (R[i,j]>0.72 or R[i,j]<0.28) else "#222222"
+            axb.text(j,i,f"{R[i,j]:.2f}",ha="center",va="center",fontsize=5.4,color=tc)
+axb.add_patch(Rectangle((-0.5,-0.5),1,R.shape[0],fill=False,edgecolor="#1A1A1A",linewidth=1.2)); axb.tick_params(length=2,width=0.5)
 cb=fig.colorbar(im,cax=caxb); cb.set_label("Per-type recall",fontsize=6.5); cb.ax.tick_params(labelsize=6,width=0.5); cb.outline.set_linewidth(0.5)
 
-# (c) dotplot
 axc=fig.add_axes([0.55,0.105,0.245,0.38])
 for i in range(ncl):
     for j in range(ng):
@@ -107,7 +121,6 @@ axc.set_axisbelow(True); axc.grid(True,lw=0.3,color="#E8E4DB",zorder=0)
 for s in axc.spines.values(): s.set_linewidth(0.5)
 axc.tick_params(length=2,width=0.5)
 
-# ---- (c) 图例: 圆圈与色柱居中同一 x, 标题都横排 ----
 CX=0.86
 axl=fig.add_axes([0.81,0.30,0.10,0.175]); axl.set_xlim(0,1); axl.set_ylim(0,1); axl.axis("off")
 axl.text(0.5,1.08,"% expr",ha="center",va="bottom",fontsize=6.3)

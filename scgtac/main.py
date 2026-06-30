@@ -52,12 +52,11 @@ def train(train_loader, test_loader, input_dim, graph_head, phi, gcn_dim, mlp_di
             outputs = model(batch_x)
             batch_z, x_imp, loss_cl, loss_cluster, mean, disp, pi, _ = outputs
             mask = torch.where(batch_x != 0, torch.ones_like(batch_x), torch.zeros_like(batch_x))
-            loss_mae = mae_f(mask * x_imp, mask * batch_x)
             counts = torch.expm1(torch.clamp(batch_x, min=0.0, max=20.0))
             size_factor = torch.clamp(counts.sum(1), min=1.0)
             loss_zinb = zinb_loss_fn(counts, mean, disp, pi, size_factor)
             cluster_weight = 0.0 if each_epoch < pretrain_epochs else lambda_cluster
-            loss = loss_mae + lambda_cl * loss_cl + cluster_weight * loss_cluster + lambda_zinb * loss_zinb
+            loss = lambda_cl * loss_cl + cluster_weight * loss_cluster + lambda_zinb * loss_zinb
             opt_model.zero_grad()
             loss.backward()
             opt_model.step()
@@ -70,12 +69,11 @@ def train(train_loader, test_loader, input_dim, graph_head, phi, gcn_dim, mlp_di
                 outputs = model(batch_x)
                 batch_z, x_imp, loss_cl, loss_cluster, mean, disp, pi, _ = outputs
                 mask = torch.where(batch_x != 0, torch.ones_like(batch_x), torch.zeros_like(batch_x))
-                loss_mae = mae_f(mask * x_imp, mask * batch_x)
                 counts = torch.expm1(torch.clamp(batch_x, min=0.0, max=20.0))
                 size_factor = torch.clamp(counts.sum(1), min=1.0)
                 loss_zinb = zinb_loss_fn(counts, mean, disp, pi, size_factor)
                 cluster_weight = 0.0 if each_epoch < pretrain_epochs else lambda_cluster
-                loss = loss_mae + lambda_cl * loss_cl + cluster_weight * loss_cluster + lambda_zinb * loss_zinb
+                loss = lambda_cl * loss_cl + cluster_weight * loss_cluster + lambda_zinb * loss_zinb
                 batch_losses.append(loss.cpu().detach().numpy())
                 z_test.append(batch_z.cpu().detach().numpy())
                 y_test.append(batch_y)

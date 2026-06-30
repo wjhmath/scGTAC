@@ -30,3 +30,12 @@ baselines/repos/
 paper_figures_final/
 generated_tables/
 baselines/scgpt_model/
+
+# 杂物 / 验证脚本(2026 整理)
+*.bak
+*.bak_*
+*.before_sweep
+*.sweep_bak
+verify*.py
+check_paper_numbers.py
+analysis/_verify_archive/

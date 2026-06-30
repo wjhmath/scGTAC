@@ -3,7 +3,7 @@ config = {
     'phi': 0.45,
     'gcn_dim': 277,
     'mlp_dim': 118,
-    'prob_feature': 0.1,
+    'prob_feature': 0.0,
     'prob_edge': 0.5,
     'tau': 0.8,
     'alpha': 0.55,

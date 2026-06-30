@@ -51,7 +51,7 @@ print(f'  {\"$DS\"} ratio=$RATIO: {n}/{adata.n_obs} cells')
   done
 
   # ratio=1.0 从已有结果提取
-  for S in 1 2 3; do
+  for S in 1 42 84; do
     LOG="results/scagcr_final/${DS}/run_seed${S}.log"
     [ -f "$LOG" ] || continue
     OUT=$(tail -1 "$LOG")

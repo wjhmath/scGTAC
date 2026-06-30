@@ -11,6 +11,15 @@ def clones(module, N):
     return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
 
 
+
+def _binarize_graph(score, phi):
+    # 有界直通估计器 (ste_bounded): phi 夹在 [0.4,0.6], tau_g=0.1
+    phi_eff = torch.clamp(phi, 0.4, 0.6)
+    P = torch.sigmoid((score - phi_eff) / 0.1)
+    B = (P > 0.5).float()
+    return B + P - P.detach()
+
+
 class ZINBLoss(nn.Module):
     def __init__(self):
         super(ZINBLoss, self).__init__()
@@ -56,7 +65,7 @@ class GraphConstructor(nn.Module):
         query, key = [l(x).view(query.size(0), -1, self.h, self.d_k).transpose(1, 2)
                       for l, x in zip(self.linears, (query, key))]
         attns = self.attention(query.squeeze(2), key.squeeze(2))
-        adj = torch.where(attns >= self.phi, torch.ones(attns.shape).to(device), torch.zeros(attns.shape).to(device))
+        adj = _binarize_graph(attns, self.phi)
         return adj, attns
 
     def attention(self, query, key):
@@ -157,7 +166,7 @@ class Model(nn.Module):
             trans_attn_mat[edge_index_out[0], edge_index_out[1]] = trans_attn.reshape(edge_index_out.shape[1], -1).mean(dim=1)
             refined_attn = torch.sigmoid(self.alpha_refine) * trans_attn_mat + (1 - torch.sigmoid(self.alpha_refine)) * attn_init
             refined_attn = torch.sigmoid(refined_attn)
-            adj_refined = torch.where(refined_attn >= self.graphconstructor.phi, torch.ones_like(refined_attn), torch.zeros_like(refined_attn))
+            adj_refined = _binarize_graph(refined_attn, self.graphconstructor.phi)
             adj = adj_refined - torch.diag_embed(adj_refined.diag())
         x_imp = self.w_imp(z)
         z_mlp = self.mlp(z)
